@@ -5,336 +5,744 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Morgan's Websites - Explorewebs</title>
     <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        /* ==========================================================================
+           ROOT VARIABLES & RESET
+           ========================================================================== */
+        :root {
+            --color-bg-primary: #000000;
+            --color-bg-secondary: #111111;
+            --color-bg-card: #0a0a0a;
+            --color-bg-glass: rgba(255,255,255,0.02);
+            --color-text-primary: #ffffff;
+            --color-text-secondary: #d0d0d0;
+            --color-text-muted: #808080;
+            --color-accent: #ffffff;
+            --color-accent-dim: #666666;
+            --color-border: rgba(255,255,255,0.12);
+            --color-glow: rgba(255,255,255,0.3);
+            --color-glow-strong: rgba(255,255,255,0.6);
+            --border-radius: 24px;
+            --border-radius-lg: 32px;
+            --shadow-sm: 0 4px 12px rgba(0,0,0,0.4);
+            --shadow-md: 0 12px 32px rgba(0,0,0,0.6);
+            --shadow-lg: 0 24px 64px rgba(0,0,0,0.8);
+            --shadow-glass: 0 8px 32px rgba(0,0,0,0.5);
+        }
+
+        * {
             margin: 0;
-            padding: 30px 16px;
-            background-color: #000000;
-            color: #e0e0e0;
-            line-height: 1.5;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--color-bg-primary);
+            color: var(--color-text-primary);
+            line-height: 1.6;
             overflow-x: hidden;
+            position: relative;
         }
-        header {
-            text-align: center;
-            font-size: clamp(1.8rem, 5vw, 2.5rem);
-            font-weight: 900;
-            margin-bottom: 16px;
-            letter-spacing: -0.02em;
-            color: #fafafa;
-            text-transform: uppercase;
-            border-bottom: 2px solid #ffffff;
-            padding-bottom: 8px;
-            max-width: 500px;
-            margin-left: auto;
-            margin-right: auto;
+
+        /* ==========================================================================
+           ANIMATED BACKGROUND
+           ========================================================================== */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(255,255,255,0.05) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255,255,255,0.03) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(255,255,255,0.02) 0%, transparent 50%);
+            z-index: -2;
+            animation: bgFloat 20s ease-in-out infinite;
         }
-        .subtitle {
-            text-align: center;
-            font-size: clamp(0.9rem, 2.5vw, 1.1rem);
-            color: #b5b5b5;
-            margin-bottom: 40px;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
-            font-weight: 400;
+
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(45deg, transparent 48%, rgba(255,255,255,0.02) 50%, transparent 52%),
+                linear-gradient(-45deg, transparent 48%, rgba(255,255,255,0.02) 50%, transparent 52%);
+            background-size: 20px 20px;
+            opacity: 0.3;
+            z-index: -1;
+            animation: gridMove 60s linear infinite;
         }
+
+        @keyframes bgFloat {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            33% { transform: translateY(-20px) rotate(1deg); }
+            66% { transform: translateY(-10px) rotate(-1deg); }
+        }
+
+        @keyframes gridMove {
+            0% { transform: translateX(0) translateY(0); }
+            100% { transform: translateX(-20px) translateY(-20px); }
+        }
+
+        /* ==========================================================================
+           CONTAINER & LAYOUT
+           ========================================================================== */
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 0 12px;
+            padding: 0 24px;
+            position: relative;
+            z-index: 1;
         }
-        .websites-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 20px;
-            margin-bottom: 60px;
-        }
-        /* NEW BLOCK STYLE - Split layout with horizontal image + vertical info */
-        .website-block {
-            background: linear-gradient(145deg, #1a1a1a, #0f0f0f);
-            border: 1px solid #333;
-            border-radius: 20px;
-            overflow: hidden;
-            box-shadow: 
-                0 8px 32px rgba(0,0,0,0.6),
-                inset 0 1px 0 rgba(255,255,255,0.1);
-            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-            display: grid;
-            grid-template-columns: 100px 1fr;
-            height: 260px;
+
+        /* ==========================================================================
+           HEADER SECTION
+           ========================================================================== */
+        .header-section {
+            text-align: center;
+            padding: 80px 0 60px;
             position: relative;
         }
-        .website-block::before {
+
+        .main-title {
+            font-size: clamp(3rem, 8vw, 5rem);
+            font-weight: 900;
+            letter-spacing: -0.02em;
+            background: linear-gradient(135deg, 
+                transparent 0%, 
+                rgba(255,255,255,0.8) 20%, 
+                rgba(255,255,255,1) 50%, 
+                rgba(255,255,255,0.8) 80%, 
+                transparent 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 16px;
+            position: relative;
+        }
+
+        .main-title::before {
+            content: '';
+            position: absolute;
+            top: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(90deg, transparent, #ffffff, transparent);
+            border-radius: 2px;
+            animation: titleGlow 3s ease-in-out infinite;
+        }
+
+        .subtitle {
+            font-size: clamp(1.1rem, 3vw, 1.4rem);
+            color: var(--color-text-secondary);
+            font-weight: 300;
+            max-width: 800px;
+            margin: 0 auto 20px;
+            line-height: 1.7;
+            letter-spacing: 0.02em;
+        }
+
+        .title-glow {
+            text-shadow: 
+                0 0 5px var(--color-glow),
+                0 0 20px var(--color-glow-strong),
+                0 0 40px rgba(255,255,255,0.1);
+            animation: titlePulse 4s ease-in-out infinite;
+        }
+
+        @keyframes titleGlow {
+            0%, 100% { opacity: 0.6; filter: blur(1px); }
+            50% { opacity: 1; filter: blur(0); }
+        }
+
+        @keyframes titlePulse {
+            0%, 100% { 
+                text-shadow: 
+                    0 0 5px var(--color-glow),
+                    0 0 20px var(--color-glow-strong),
+                    0 0 40px rgba(255,255,255,0.1);
+            }
+            50% { 
+                text-shadow: 
+                    0 0 10px var(--color-glow-strong),
+                    0 0 30px var(--color-glow-strong),
+                    0 0 60px rgba(255,255,255,0.2);
+            }
+        }
+
+        /* ==========================================================================
+           WEBSITES GRID
+           ========================================================================== */
+        .websites-section {
+            padding: 60px 0;
+        }
+
+        .websites-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+            gap: 40px;
+            margin-top: 40px;
+        }
+
+        .website-card {
+            background: linear-gradient(145deg, 
+                var(--color-bg-card) 0%, 
+                rgba(255,255,255,0.02) 50%, 
+                var(--color-bg-card) 100%);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--color-border);
+            border-radius: var(--border-radius-lg);
+            padding: 40px 36px;
+            height: 420px;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.6s cubic-bezier(0.23, 1, 0.320, 1);
+            cursor: default;
+        }
+
+        .website-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, 
+                transparent, 
+                rgba(255,255,255,0.04), 
+                transparent);
+            transition: left 0.6s;
+        }
+
+        .website-card:hover {
+            transform: translateY(-16px) scale(1.02);
+            box-shadow: 
+                0 32px 80px rgba(0,0,0,0.9),
+                0 0 0 1px rgba(255,255,255,0.2),
+                inset 0 1px 0 rgba(255,255,255,0.1);
+            border-color: rgba(255,255,255,0.3);
+        }
+
+        .website-card:hover::before {
+            left: 100%;
+        }
+
+        .website-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .website-icon-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            min-width: 60px;
+        }
+
+        .icon-main {
+            font-size: 2.8rem;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 16px;
+            background: rgba(255,255,255,0.08);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: all 0.4s ease;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+        }
+
+        .website-card:hover .icon-main {
+            transform: scale(1.1) rotate(5deg);
+            background: rgba(255,255,255,0.15);
+            box-shadow: 
+                0 8px 24px rgba(255,255,255,0.1),
+                0 0 20px rgba(255,255,255,0.05);
+        }
+
+        .icon-secondary {
+            font-size: 1.2rem;
+            opacity: 0.6;
+            transition: opacity 0.3s ease;
+        }
+
+        .website-card:hover .icon-secondary {
+            opacity: 1;
+        }
+
+        .website-name {
+            font-size: clamp(1.6rem, 4vw, 2rem);
+            font-weight: 800;
+            background: linear-gradient(135deg, 
+                rgba(255,255,255,0.9) 0%, 
+                rgba(255,255,255,1) 30%, 
+                rgba(255,255,255,0.9) 70%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1.2;
+            letter-spacing: -0.02em;
+            margin-bottom: 8px;
+        }
+
+        .website-description {
+            color: var(--color-text-secondary);
+            font-size: 1.05rem;
+            line-height: 1.6;
+            flex-grow: 1;
+            margin-bottom: 28px;
+            font-weight: 400;
+        }
+
+        .website-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 32px;
+        }
+
+        .tag {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--color-accent-dim);
+            padding: 6px 14px;
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            letter-spacing: 0.02em;
+        }
+
+        .website-card:hover .tag {
+            color: var(--color-text-primary);
+            border-color: rgba(255,255,255,0.4);
+            background: rgba(255,255,255,0.05);
+        }
+
+        .website-cta {
+            margin-top: auto;
+        }
+
+        .website-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px 32px;
+            background: rgba(255,255,255,0.06);
+            backdrop-filter: blur(20px);
+            border: 2px solid rgba(255,255,255,0.2);
+            border-radius: 50px;
+            color: var(--color-text-primary);
+            font-weight: 700;
+            font-size: 0.95rem;
+            text-decoration: none;
+            letter-spacing: 0.03em;
+            text-transform: uppercase;
+            transition: all 0.4s cubic-bezier(0.23, 1, 0.320, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .website-link::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, 
+                transparent, 
+                rgba(255,255,255,0.2), 
+                transparent);
+            transition: left 0.5s;
+        }
+
+        .website-link:hover {
+            background: rgba(255,255,255,0.15);
+            border-color: rgba(255,255,255,0.5);
+            transform: translateY(-4px);
+            box-shadow: 
+                0 16px 40px rgba(255,255,255,0.15),
+                0 0 30px rgba(255,255,255,0.1);
+        }
+
+        .website-link:hover::before {
+            left: 100%;
+        }
+
+        /* ==========================================================================
+           ABOUT SECTION
+           ========================================================================== */
+        .about-section {
+            max-width: 800px;
+            margin: 80px auto 100px;
+            background: linear-gradient(145deg, 
+                rgba(255,255,255,0.02) 0%, 
+                rgba(255,255,255,0.01) 50%, 
+                rgba(255,255,255,0.02) 100%);
+            backdrop-filter: blur(30px);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: var(--border-radius-lg);
+            padding: 48px 56px;
+            text-align: center;
+            position: relative;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .about-section::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            padding: 2px;
+            background: linear-gradient(45deg, 
+                rgba(255,255,255,0.1), 
+                rgba(255,255,255,0.05), 
+                rgba(255,255,255,0.1));
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask-composite: exclude;
+            border-radius: var(--border-radius-lg);
+            animation: borderRotate 8s linear infinite;
+        }
+
+        @keyframes borderRotate {
+            100% { transform: rotate(360deg); }
+        }
+
+        .about-title {
+            font-size: clamp(1.4rem, 3.5vw, 1.8rem);
+            font-weight: 700;
+            color: var(--color-text-primary);
+            margin-bottom: 24px;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        .about-text {
+            font-size: 1.1rem;
+            color: var(--color-text-secondary);
+            line-height: 1.8;
+            font-weight: 400;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* ==========================================================================
+           CONTACT SECTION
+           ========================================================================== */
+        .contact-section {
+            max-width: 480px;
+            margin: 100px auto 80px;
+            text-align: center;
+            padding: 56px 40px;
+            background: linear-gradient(145deg, 
+                var(--color-bg-glass) 0%, 
+                rgba(255,255,255,0.015) 50%, 
+                var(--color-bg-glass) 100%);
+            backdrop-filter: blur(40px);
+            border-radius: var(--border-radius-lg);
+            border: 2px solid rgba(255,255,255,0.12);
+            box-shadow: 
+                var(--shadow-glass),
+                inset 0 1px 0 rgba(255,255,255,0.08);
+            position: relative;
+            transition: all 0.4s ease;
+        }
+
+        .contact-section::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, 
+                rgba(255,255,255,0.2), 
+                rgba(255,255,255,0.1), 
+                rgba(255,255,255,0.2));
+            border-radius: calc(var(--border-radius-lg) + 2px);
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .contact-section:hover::before {
+            opacity: 1;
+        }
+
+        .contact-title {
+            font-size: clamp(1.5rem, 4vw, 2rem);
+            font-weight: 800;
+            color: var(--color-text-primary);
+            margin-bottom: 16px;
+            letter-spacing: -0.01em;
+            position: relative;
+        }
+
+        .contact-subtitle {
+            font-size: 1.1rem;
+            color: var(--color-text-muted);
+            margin-bottom: 36px;
+            font-weight: 400;
+        }
+
+        .whatsapp-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 14px;
+            padding: 20px 48px;
+            background: linear-gradient(135deg, 
+                rgba(255,255,255,0.12) 0%, 
+                rgba(255,255,255,0.08) 50%, 
+                rgba(255,255,255,0.12) 100%);
+            backdrop-filter: blur(30px);
+            border: 2px solid rgba(255,255,255,0.25);
+            border-radius: 60px;
+            color: var(--color-text-primary);
+            font-weight: 800;
+            font-size: 1.1rem;
+            letter-spacing: 0.04em;
+            text-decoration: none;
+            text-transform: uppercase;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.23, 1, 0.320, 1);
+            box-shadow: 
+                0 16px 48px rgba(0,0,0,0.6),
+                inset 0 1px 0 rgba(255,255,255,0.2);
+        }
+
+        .whatsapp-link::before {
             content: '';
             position: absolute;
             top: 0;
             left: 0;
-            right: 0;
-            height: 3px;
-            background: linear-gradient(90deg, #ffffff, #ccc, #ffffff);
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-        .website-block:hover {
-            transform: translateY(-10px) scale(1.02);
-            box-shadow: 
-                0 20px 60px rgba(255,255,255,0.15),
-                inset 0 1px 0 rgba(255,255,255,0.2);
-            border-color: #ffffff;
-        }
-        .website-block:hover::before {
-            opacity: 1;
-        }
-        /* NEW Image section - vertical strip */
-        .website-preview {
-            width: 100px;
+            width: 0;
             height: 100%;
-            background: linear-gradient(135deg, #2a2a2a, #1f1f1f);
-            position: relative;
-            overflow: hidden;
+            background: linear-gradient(90deg, 
+                transparent, 
+                rgba(255,255,255,0.3), 
+                transparent);
+            transition: width 0.6s ease;
         }
-        .website-preview img {
-            width: 100%;
-            height: 140px;
-            object-fit: cover;
-            object-position: center;
-            filter: grayscale(20%) brightness(1.1);
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-        }
-        .website-preview::after {
-            content: attr(data-type);
-            position: absolute;
-            bottom: 12px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: rgba(255,255,255,0.95);
-            color: #000;
-            font-weight: 700;
-            font-size: 0.7rem;
-            padding: 4px 8px;
-            border-radius: 8px;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            white-space: nowrap;
-        }
-        /* NEW Content section - expanded vertical space */
-        .website-content {
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            text-align: left;
-        }
-        .website-name {
-            font-size: 1.15rem;
-            font-weight: 800;
-            margin: 0 0 8px 0;
-            color: #fafafa;
-            text-transform: uppercase;
-            letter-spacing: 0.02em;
-            line-height: 1.2;
-        }
-        .website-description {
-            font-size: 0.88rem;
-            color: #d0d0d0;
-            line-height: 1.4;
-            margin-bottom: 16px;
-            flex-grow: 1;
-        }
-        .website-icons {
-            display: flex;
-            gap: 12px;
-            margin-bottom: 16px;
-        }
-        .music-genre, .chat-icon {
-            font-size: 1.2rem;
-            transition: all 0.3s ease;
-            cursor: default;
-        }
-        .music-genre:hover, .chat-icon:hover {
-            transform: scale(1.15) translateY(-2px);
-            filter: drop-shadow(0 4px 8px rgba(255,255,255,0.3));
-        }
-        .website-link {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 10px 24px;
-            background: rgba(255,255,255,0.15);
-            color: #fafafa;
-            font-weight: 700;
-            font-size: 0.8rem;
-            text-decoration: none;
-            border-radius: 25px;
-            border: 1px solid rgba(255,255,255,0.3);
-            transition: all 0.3s ease;
-            text-transform: uppercase;
-            letter-spacing: 0.03em;
-            backdrop-filter: blur(10px);
-        }
-        .website-link:hover {
-            background: #ffffff;
-            color: #000000;
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(255,255,255,0.3);
-        }
-        .about-section {
-            background-color: #121212;
-            border: 1px solid #ffffff;
-            border-radius: 16px;
-            padding: 32px 24px;
-            margin-bottom: 40px;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
-            text-align: center;
-        }
-        .about-title {
-            font-size: clamp(1.2rem, 3.5vw, 1.6rem);
-            font-weight: 700;
-            margin-bottom: 16px;
-            color: #fafafa;
-            text-transform: uppercase;
-        }
-        .about-text {
-            font-size: 0.95rem;
-            color: #bbbbbb;
-            line-height: 1.5;
-        }
-        .contact-section {
-            background-color: #121212;
-            border: 1px solid #ffffff;
-            border-radius: 20px;
-            padding: 32px 24px;
-            text-align: center;
-            max-width: 400px;
-            margin: 0 auto 30px;
-        }
-        .contact-title {
-            font-size: clamp(1.1rem, 3vw, 1.4rem);
-            font-weight: 700;
-            margin-bottom: 8px;
-            color: #fafafa;
-            text-transform: uppercase;
-        }
-        .contact-subtitle {
-            font-size: 0.9rem;
-            margin-bottom: 24px;
-            color: #999999;
-        }
-        .whatsapp-link {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            background-color: #fafafa;
-            color: #000000;
-            padding: 12px 28px;
-            font-weight: 600;
-            font-size: 0.9rem;
-            border-radius: 40px;
-            text-decoration: none;
-            transition: all 0.3s ease;
-            letter-spacing: 0.02em;
-            text-transform: uppercase;
-        }
+
         .whatsapp-link:hover {
-            background-color: transparent;
-            color: #fafafa;
-            transform: translateY(-2px);
+            transform: translateY(-8px) scale(1.05);
+            box-shadow: 
+                0 32px 80px rgba(255,255,255,0.15),
+                0 0 40px rgba(255,255,255,0.2),
+                inset 0 1px 0 rgba(255,255,255,0.3);
+            border-color: rgba(255,255,255,0.6);
         }
-        
-        /* Mobile responsiveness */
-        @media (max-width: 768px) {
-            body {
-                padding: 20px 12px;
-            }
-            .websites-grid {
-                grid-template-columns: 1fr;
-                gap: 16px;
-            }
-            .website-block {
-                grid-template-columns: 80px 1fr;
-                height: 240px;
-            }
-            .website-preview img {
-                height: 120px;
-            }
+
+        .whatsapp-link:hover::before {
+            width: 100%;
         }
-        
-        @media (min-width: 769px) {
+
+        /* ==========================================================================
+           RESPONSIVE DESIGN
+           ========================================================================== */
+        @media (max-width: 1024px) {
             .websites-grid {
                 grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+                gap: 32px;
             }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 20px;
+            }
+            
+            .header-section {
+                padding: 60px 0 40px;
+            }
+            
+            .websites-grid {
+                grid-template-columns: 1fr;
+                gap: 28px;
+            }
+            
+            .website-card {
+                height: auto;
+                padding: 32px 28px;
+            }
+            
+            .about-section {
+                margin: 60px auto 80px;
+                padding: 36px 28px;
+            }
+            
+            .contact-section {
+                margin: 80px auto 60px;
+                padding: 40px 28px;
+                width: 90%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .website-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 20px;
+            }
+            
+            .website-icon-group {
+                flex-direction: row;
+                gap: 12px;
+            }
+            
+            .icon-main {
+                width: 48px;
+                height: 48px;
+                font-size: 2rem;
+            }
+        }
+
+        /* ==========================================================================
+           PERFORMANCE & INTERACTION
+           ========================================================================== */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(255,255,255,0.02);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255,255,255,0.2);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(255,255,255,0.4);
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <header>Morgan's Websites</header>
-        <p class="subtitle">A collection of web projects showcasing creative development</p>
-        
-        <section class="about-section">
-            <h2 class="about-title">About This Collection</h2>
-            <p class="about-text">
-                These are websites created by Morgan. People can also request to add websites here that they want featured. 
-                This hub showcases both personal projects and community contributions.
+        <!-- Header Section -->
+        <section class="header-section">
+            <h1 class="main-title title-glow">Morgan's Websites</h1>
+            <p class="subtitle">
+                A curated collection of modern web projects showcasing creative development 
+                and community contributions with stunning visual craftsmanship.
             </p>
         </section>
 
-        <section class="websites-grid">
-            <!-- ProdsX - NEW BLOCK STYLE -->
-            <article class="website-block">
-                <div class="website-preview">
-                    <img src="prodsx-image.jpg" alt="ProdsX Platform Preview" />
-                </div>
-                <div class="website-content">
-                    <h2 class="website-name">ProdsX</h2>
-                    <p class="website-description">
-                        Global platform for music producers to showcase beats and connect with artists.
-                    </p>
-                    <div class="website-icons music-icons">
-                        <span class="music-genre">🎹</span>
-                        <span class="music-genre">🥁</span>
-                        <span class="music-genre">🎤</span>
-                        <span class="music-genre">🎵</span>
+        <!-- Websites Section -->
+        <section class="websites-section">
+            <div class="websites-grid">
+                <!-- ProdsX Card -->
+                <article class="website-card">
+                    <div class="website-header">
+                        <div class="website-icon-group">
+                            <div class="icon-main">🎹</div>
+                            <div class="icon-secondary">music</div>
+                        </div>
+                        <div class="website-content">
+                            <h2 class="website-name">ProdsX</h2>
+                            <div class="website-tags">
+                                <span class="tag">Music Platform</span>
+                                <span class="tag">Producer Network</span>
+                                <span class="tag">Artist Connect</span>
+                            </div>
+                        </div>
                     </div>
-                    <a href="https://xcmorgan.github.io/ProdsX/" target="_blank" rel="noopener noreferrer" class="website-link">
-                        Explore →
-                    </a>
-                </div>
-            </article>
+                    <p class="website-description">
+                        Global platform empowering music producers to showcase beats, 
+                        collaborate with artists, and build their professional presence.
+                    </p>
+                    <div class="website-cta">
+                        <a href="https://xcmorgan.github.io/ProdsX/" 
+                           target="_blank" 
+                           rel="noopener noreferrer" 
+                           class="website-link">
+                            Explore Platform →
+                        </a>
+                    </div>
+                </article>
 
-            <!-- GroupsZA - NEW BLOCK STYLE -->
-            <article class="website-block">
-                <div class="website-preview" data-type="Social">
-                    <img src="groupsza-preview.jpg" alt="GroupsZA WhatsApp Groups Preview" />
-                </div>
-                <div class="website-content">
-                    <h2 class="website-name">GroupsZA</h2>
-                    <p class="website-description">
-                        Its group chats around South Africa.
-                    </p>
-                    <div class="website-icons chat-icons">
-                        <span class="chat-icon">💬</span>
-                        <span class="chat-icon">👥</span>
-                        <span class="chat-icon">📱</span>
-                        <span class="chat-icon">🌍</span>
+                <!-- GroupsZA Card -->
+                <article class="website-card">
+                    <div class="website-header">
+                        <div class="website-icon-group">
+                            <div class="icon-main">💬</div>
+                            <div class="icon-secondary">community</div>
+                        </div>
+                        <div class="website-content">
+                            <h2 class="website-name">GroupsZA</h2>
+                            <div class="website-tags">
+                                <span class="tag">Social Network</span>
+                                <span class="tag">South Africa</span>
+                                <span class="tag">Group Chats</span>
+                            </div>
+                        </div>
                     </div>
-                    <a href="https://xcmorgan.github.io/GroupsZa/" target="_blank" rel="noopener noreferrer" class="website-link">
-                        Visit GroupsZA →
-                    </a>
-                </div>
-            </article>
+                    <p class="website-description">
+                        South African community platform connecting people through 
+                        local group chats for networking, events, and shared interests.
+                    </p>
+                    <div class="website-cta">
+                        <a href="https://xcmorgan.github.io/GroupsZa/" 
+                           target="_blank" 
+                           rel="noopener noreferrer" 
+                           class="website-link">
+                            Visit GroupsZA →
+                        </a>
+                    </div>
+                </article>
+            </div>
         </section>
 
+        <!-- About Section -->
+        <section class="about-section">
+            <h2 class="about-title">About This Collection</h2>
+            <p class="about-text">
+                These websites represent Morgan's creative vision brought to life through 
+                modern web technologies. This hub welcomes community contributions—submit 
+                your projects to join this showcase of innovation and digital craftsmanship.
+            </p>
+        </section>
+
+        <!-- Contact Section -->
         <section class="contact-section">
-            <h2 class="contact-title">Want to add a website?</h2>
-            <p class="contact-subtitle">Message me directly:</p>
-            <a href="https://wa.me/27638100407" target="_blank" rel="noopener noreferrer" class="whatsapp-link">
-                💬 WhatsApp
+            <h2 class="contact-title">Feature Your Website</h2>
+            <p class="contact-subtitle">Ready to showcase your project? Get in touch directly:</p>
+            <a href="https://wa.me/27638100407" 
+               target="_blank" 
+               rel="noopener noreferrer" 
+               class="whatsapp-link">
+                💬 Contact via WhatsApp
             </a>
         </section>
     </div>
